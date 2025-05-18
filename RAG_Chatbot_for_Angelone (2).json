@@ -1,0 +1,632 @@
+{
+  "name": "RAG Chatbot for Angelone",
+  "nodes": [
+    {
+      "parameters": {
+        "mode": "insert",
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "company-file",
+          "mode": "list",
+          "cachedResultName": "company-file"
+        },
+        "options": {}
+      },
+      "id": "753455a3-ddc8-4a74-b043-70a0af38ff9e",
+      "name": "Pinecone Vector Store",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "position": [
+        1656,
+        240
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "pineconeApi": {
+          "id": "X8Bo2qNbB0byNItv",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "binaryMode": "specificField",
+        "options": {}
+      },
+      "id": "215f0519-4359-4e4b-a90c-7e54b1cc52b5",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        1760,
+        462.5
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "chunkOverlap": 100,
+        "options": {}
+      },
+      "id": "863d3d1d-1621-406e-8320-688f64b07b09",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        1848,
+        660
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "You are a helpful customer service assistant designed to answer customer questions based on the provided documentation of all different policies.\n\nThe documents provided are for different insurance policies and the name of the document is the insurance policy name.\n\nRetrieve relevant information from the provided policy documents and provide a concise, accurate, and informative answer to the customer's question. Sometimes the information might not be directly available in documents, in that case understand the user intent and try to answer based on the relevant information from documents.\n\nUse the tool called \"company_documents_tool\" to retrieve any information from the company's documents.\n\nIf the answer cannot be found in the provided documents or is not available under any webpages of https://www.angelone.in/support then respond with \"I Don't know\"."
+        }
+      },
+      "id": "5af1efb1-ea69-466e-bb3b-2b7e6b1ceef7",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        572,
+        1200
+      ],
+      "typeVersion": 1.7
+    },
+    {
+      "parameters": {
+        "name": "company_documents_tool",
+        "description": "The data is information regarding different insurance policies.\n\nThe name of the document represents the insurance policy and the document contains information relevant to that policy\n\nRetrieve information from any documents. Some information might not directly be available, in that case do Natural language processing and extract the information."
+      },
+      "id": "825632ac-1edf-4e63-948d-b1a498b2b962",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "position": [
+        780,
+        1422.5
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "pineconeIndex": {
+          "__rl": true,
+          "value": "company-file",
+          "mode": "list",
+          "cachedResultName": "company-file"
+        },
+        "options": {}
+      },
+      "id": "72d2f685-bcc3-4e62-a5e3-72c0fe65f8e8",
+      "name": "Pinecone Vector Store (Retrieval)",
+      "type": "@n8n/n8n-nodes-langchain.vectorStorePinecone",
+      "position": [
+        676,
+        1622.5
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "pineconeApi": {
+          "id": "X8Bo2qNbB0byNItv",
+          "name": "PineconeApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1uF3sacqcP3zZxO8KeavwayVTDeRyvXt2",
+          "mode": "list",
+          "cachedResultName": "America's_Choice_2500_Gold_SOB (1) (1).pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1uF3sacqcP3zZxO8KeavwayVTDeRyvXt2/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "id": "8bb6ebb1-1deb-498b-8da4-b809a736e097",
+      "name": "Download File From Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        600,
+        -40
+      ],
+      "typeVersion": 3,
+      "executeOnce": false,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "d8E0VmWKoXipfICy",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Chat with company documents"
+      },
+      "id": "bd83bacf-dff1-4b7c-af5c-b249fb16c113",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        660,
+        1020
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "triggerOn": "specificFolder",
+        "folderToWatch": {
+          "__rl": true,
+          "value": "https://drive.google.com/drive/u/0/folders/1UyY_THTRik4s90E0ORbmIEYuQ_S6G3i9",
+          "mode": "url"
+        },
+        "event": "fileCreated",
+        "options": {
+          "fileType": "all"
+        }
+      },
+      "id": "3a6c6cef-7a19-42ef-8092-eaf57dae4cdd",
+      "name": "Google Drive File Created",
+      "type": "n8n-nodes-base.googleDriveTrigger",
+      "position": [
+        320,
+        340
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "d8E0VmWKoXipfICy",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "id": "1e38f1c8-7bd0-4eeb-addc-62339582d350",
+      "name": "Window Buffer Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "position": [
+        660,
+        1420
+      ],
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Hi there! 👋\nMy name is Nikunj. How can I assist you today?",
+        "options": {}
+      },
+      "id": "4b0ab858-99b1-4337-8c5c-a223519e3662",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "position": [
+        320,
+        1200
+      ],
+      "webhookId": "5f1c0c82-0ff9-40c7-9e2e-b1a96ffe24cd",
+      "typeVersion": 1.1
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.0-flash-exp",
+        "options": {}
+      },
+      "id": "f2133a06-0088-46de-9f74-a3f9fe478f98",
+      "name": "Google Gemini Chat Model (retrieval)",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "position": [
+        972,
+        1620
+      ],
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "1sJ36k7M3UhQNiqf",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4o-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        480,
+        1420
+      ],
+      "id": "57b692c2-f191-43a4-8bef-3085392f1ba7",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "wQMj4RotEbwngfZY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "13ALRShn1xODElgCyD9T3YU2YUTg0T12F",
+          "mode": "list",
+          "cachedResultName": "America's_Choice_5000_Bronze_SOB (2).pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/13ALRShn1xODElgCyD9T3YU2YUTg0T12F/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        580,
+        700
+      ],
+      "id": "6416a87b-40ef-4da7-ba65-070c54215dcb",
+      "name": "Google Drive",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "d8E0VmWKoXipfICy",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "13ALRShn1xODElgCyD9T3YU2YUTg0T12F",
+          "mode": "list",
+          "cachedResultName": "America's_Choice_5000_Bronze_SOB (2).pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/13ALRShn1xODElgCyD9T3YU2YUTg0T12F/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        600,
+        160
+      ],
+      "id": "0f334480-a303-4594-92ae-4b354e40430f",
+      "name": "Google Drive1",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "d8E0VmWKoXipfICy",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1rSpkFiC0cINJU2jmOznkPuA3p2ZKkuYE",
+          "mode": "list",
+          "cachedResultName": "America's_Choice_7350_Copper_SOB (1) (1).pdf",
+          "cachedResultUrl": "https://drive.google.com/file/d/1rSpkFiC0cINJU2jmOznkPuA3p2ZKkuYE/view?usp=drivesdk"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        580,
+        520
+      ],
+      "id": "fa6f0ca1-34ec-4c12-8ae3-8a62535b59b2",
+      "name": "Google Drive2",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "d8E0VmWKoXipfICy",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "1zYRizKj1cdEgt1OxdwjB0nxA7uItxS9a",
+          "mode": "list",
+          "cachedResultName": "America's_Choice_Medical_Questions_-_Modified_(3) (1).docx",
+          "cachedResultUrl": "https://docs.google.com/document/d/1zYRizKj1cdEgt1OxdwjB0nxA7uItxS9a/edit?usp=drivesdk&ouid=100961991061652273158&rtpof=true&sd=true"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        540,
+        340
+      ],
+      "id": "4b0e6fa4-9cfa-496b-beb4-dd9bf16344ae",
+      "name": "Google Drive3",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "d8E0VmWKoXipfICy",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1024
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1620,
+        500
+      ],
+      "id": "7de4ff76-07e0-4797-93a4-7192e904dd28",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": "wQMj4RotEbwngfZY",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "text-embedding-3-large",
+        "options": {
+          "dimensions": 1024
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        780,
+        1860
+      ],
+      "id": "38d022b0-a380-4860-9775-98b76c189e81",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": "wQMj4RotEbwngfZY",
+          "name": "OpenAi account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "AI Agent": {
+      "main": [
+        []
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Window Buffer Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store": {
+      "main": [
+        []
+      ]
+    },
+    "Google Drive File Created": {
+      "main": [
+        [
+          {
+            "node": "Google Drive3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Drive2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Drive1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Download File From Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File From Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Pinecone Vector Store (Retrieval)": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model (retrieval)": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive1": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive2": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Drive3": {
+      "main": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Pinecone Vector Store (Retrieval)",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {},
+  "versionId": "a737bd0c-6f5b-4017-bd35-718be13bdb69",
+  "meta": {
+    "templateId": "2753",
+    "templateCredsSetupCompleted": true,
+    "instanceId": "81135aa27a899ea1eaee16539533fa5d3d10df9f9eb92d920d9ec2f14f227b5e"
+  },
+  "id": "bmAH9ODd4IsmHw1a",
+  "tags": []
+}

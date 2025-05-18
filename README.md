@@ -12,6 +12,8 @@ Invite link to view the workflow on n8n - https://nikunjgondha.app.n8n.cloud/sig
 In case you are not able to access the invite link, refer to the JSON file, download and import in n8n workflows
 
 
+Agent in Action
+
 <img width="1279" alt="image" src="https://github.com/user-attachments/assets/1d12c0ff-1cfd-4df9-8934-250029457c84" />
 
 <img width="1277" alt="image" src="https://github.com/user-attachments/assets/e9472c3f-9954-449d-9307-f9fb5b219f29" />
